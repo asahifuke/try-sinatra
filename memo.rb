@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 require 'csv'
+require 'securerandom'
 
+# Service to download ftp files from the server
 class Memo
   CSV_NAME = 'data.csv'
   attr_accessor :id, :title, :body
@@ -13,17 +15,11 @@ class Memo
   end
 
   def save
-    is_creation = true
     rows = Memo.read_csv
     rows.map! do |row|
-      if row[0] == id
-        is_creation = false
-        [@id, @title, @body]
-      else
-        row
-      end
+      row[0] == id ? [@id, @title, @body] : row
     end
-    rows.push([@id = SecureRandom.hex(20), @title, @body]) if is_creation
+    rows.push([@id = SecureRandom.hex(20), @title, @body]) unless id
     Memo.write_csv(rows)
   end
 

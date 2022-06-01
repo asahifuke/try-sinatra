@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 require 'minitest/autorun'
 require_relative './memo'
 
+# Service to download ftp files from the server
 class MemoTest < Minitest::Test
   def setup
     id = Memo.read_csv[-1][0]

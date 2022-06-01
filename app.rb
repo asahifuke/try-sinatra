@@ -3,10 +3,8 @@
 require_relative './memo'
 require 'sinatra'
 require 'sinatra/reloader'
-require 'securerandom'
-require 'csv'
-require "erb"
-include ERB::Util
+require 'erb'
+Object.include ERB::Util
 
 get '/' do
   @memos = Memo.all
