@@ -6,8 +6,8 @@ require_relative './memo'
 # Service to download ftp files from the server
 class MemoTest < Minitest::Test
   def setup
-    `echo '1414d118acfa14bb9a4b86d72303893e8a157625, fdsafdsa, 5rfasdfd' > rows.csv `
-    `echo '1414d118acfa14bb9a4b86d72303893e8a15762d, 5gfadsa, aafdsae' >> rows.csv `
+    `echo '1414d118acfa14bb9a4b86d72303893e8a157625, test1, test2' > rows.csv `
+    `echo '1414d118acfa14bb9a4b86d72303893e8a15762d, test3, test4' >> rows.csv `
     id = Memo.read_csv[-1][0]
     @memo = Memo.find(id)
   end
