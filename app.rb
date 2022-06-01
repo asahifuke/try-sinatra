@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
+require_relative './memo'
 require 'sinatra'
 require 'sinatra/reloader'
 require 'securerandom'
 require 'csv'
-require_relative './memo'
+require "erb"
+include ERB::Util
 
 get '/' do
   @memos = Memo.all
@@ -33,7 +35,9 @@ end
 
 patch '/memos/:id' do
   @memo = Memo.find(params[:id])
-  @memo.update(title: params[:title], body: params[:body])
+  @memo.title = params[:title]
+  @memo.body = params[:body]
+  @memo.save
   redirect "/memos/#{@memo.id}"
 end
 

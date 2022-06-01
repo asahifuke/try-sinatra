@@ -1,71 +1,59 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 class Memo
   CSV_NAME = 'data.csv'
   attr_accessor :id, :title, :body
 
-  def initialize(title:, body:, id: 'save')
+  def initialize(title:, body:, id: nil)
     @id    = id
-    @title = id == 'save' ? Memo.escape(title) : title
-    @body  = id == 'save' ? Memo.escape(body)  : body
+    @title = title
+    @body  = body
   end
 
   def save
-    datas = Memo.read_csv
-    datas.push([SecureRandom.hex(20), title, body])
-    Memo.write_csv(datas)
-  end
-
-  def update(title:, body:)
-    title = Memo.escape(title)
-    body  = Memo.escape(body)
-    datas = Memo.read_csv
-    datas.map! do |data|
-      data[0] == id ? [id, title, body] : data
+    is_creation = true
+    rows = Memo.read_csv
+    rows.map! do |row|
+      if row[0] == id
+        is_creation = false
+        [@id, @title, @body]
+      else
+        row
+      end
     end
-    Memo.write_csv(datas)
+    rows.push([@id = SecureRandom.hex(20), @title, @body]) if is_creation
+    Memo.write_csv(rows)
   end
 
   def destory
-    datas = Memo.read_csv
-    datas.delete_if { |data| data[0] == id }
-    Memo.write_csv(datas)
+    rows = Memo.read_csv
+    rows.delete_if { |row| row[0] == id }
+    Memo.write_csv(rows)
   end
 
   class << self
     def all
-      Memo.read_csv.map! { |data| Memo.new(id: data[0], title: data[1], body: data[2]) }
+      Memo.read_csv.map! { |row| Memo.new(id: row[0], title: row[1], body: row[2]) }
     end
 
     def find(id)
-      id = Memo.escape(id)
+      memo = nil
       CSV.foreach(CSV_NAME) do |row|
-        return Memo.new(id: row[0], title: row[1], body: row[2]) if row[0] == id
+        memo = Memo.new(id: row[0], title: row[1], body: row[2]) if row[0] == id
       end
+      memo
     end
 
-    def write_csv(datas)
-      CSV.open(CSV_NAME, 'wb') do |csv|
-        datas.each { |data| csv << data }
+    def write_csv(rows)
+      CSV.open(CSV_NAME, 'w') do |csv|
+        rows.each { |row| csv << row }
       end
     end
 
     def read_csv
       CSV.read(CSV_NAME)
-    end
-
-    def escape(text)
-      escape_characters = {
-        '&' => '&amp;',
-        '<' => '&lt;',
-        '>' => '&gt;',
-        '\'' => '&quot;',
-        '"' => '&#39;'
-      }
-      escape_characters.each do |key, value|
-        text.gsub!(key, value)
-      end
-      text
     end
   end
 end

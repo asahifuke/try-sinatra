@@ -4,12 +4,22 @@
  # Installation
  - まず、git@github.com:asahifuke/try_sinatra.gitをdevelopmentブランチでクローンします。
 ```bash
-git clone -b development git@github.com:asahifuke/try_sinatra.git
+git clone -b development git@github.com:asahifuke/try-sinatra.git
 ```
 
 - cloneしたディレクトリーに移ります。
 ```bash
-cd try_sinatra
+cd try-sinatra
+```
+
+- rbenvの3.1.2をインストールしてください
+```bash
+rbenv install 3.1.2
+```
+
+- rbenvのバージョンをlocalで3.1.2にしてください。
+```bash
+rbenv local 3.1.2
 ```
 
 - gemをインストールしてください。

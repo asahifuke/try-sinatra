@@ -1,4 +1,4 @@
-<div style="text-align: right;">
+<div class="text-align-right">
   <button onclick='location.href="/memos/new"'>
     追加
   </button>
@@ -7,7 +7,7 @@
   <ul>
     <li>
       <a href= "/memos/<%= memo.id %>">
-        <%= memo.title %>
+        <%= html_escape(memo.title) %>
       </a>
     </li>
   </ul>

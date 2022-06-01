@@ -1,14 +1,14 @@
 <form method="post" action="/memos/<%= @memo.id %>" >
-<input type="hidden" id="_method" name="_method" value="patch">
+<input type="hidden" name="_method" value="patch">
 <div>
-  <input style='width: 100%; margin-bottom: 15px;' type="text" name="title" value=<%= @memo.title %>>
+  <input class="title-form margin-bottom" type="text" name="title" value=<%= html_escape(@memo.title) %>>
 </div>
 
 <div>
-  <textarea style='height: 300px; width: 100%; margin-bottom: 15px;' type="text-area" name="body"><%= @memo.body %></textarea>
+  <textarea class="body-form margin-bottom" type="text-area" name="body"><%= html_escape(@memo.body) %></textarea>
 </div>
 
-<div style='text-align: center;'>
+<div class="submit">
   <input type="submit" value="変更">
 </div>
 </form>
