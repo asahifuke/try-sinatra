@@ -6,6 +6,8 @@ require_relative './memo'
 # Service to download ftp files from the server
 class MemoTest < Minitest::Test
   def setup
+    `echo '1414d118acfa14bb9a4b86d72303893e8a157625, fdsafdsa, 5rfasdfd' > rows.csv `
+    `echo '1414d118acfa14bb9a4b86d72303893e8a15762d, 5gfadsa, aafdsae' >> rows.csv `
     id = Memo.read_csv[-1][0]
     @memo = Memo.find(id)
   end
@@ -24,13 +26,13 @@ class MemoTest < Minitest::Test
   end
 
   def test_create
-    hoge_title = 'hoge title1'
-    hoge_body = 'hoge body1'
-    memo = Memo.new(title: hoge_title, body: hoge_body)
+    new_title = 'hoge'
+    new_body = 'hoge2hoge'
+    memo = Memo.new(title: new_title, body: new_body)
     memo.save
     memo2 = Memo.find(memo.id)
-    assert_equal memo2.title, hoge_title
-    assert_equal memo2.body,  hoge_body
+    assert_equal memo2.title, new_title
+    assert_equal memo2.body,  new_body
   end
 
   def test_update

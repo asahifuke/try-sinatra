@@ -5,7 +5,7 @@ require 'securerandom'
 
 # Service to download ftp files from the server
 class Memo
-  CSV_NAME = 'data.csv'
+  CSV_NAME = 'rows.csv'
   attr_accessor :id, :title, :body
 
   def initialize(title:, body:, id: nil)
