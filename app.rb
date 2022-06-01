@@ -4,6 +4,7 @@ require_relative './memo'
 require 'sinatra'
 require 'sinatra/reloader'
 require 'erb'
+
 Object.include ERB::Util
 
 get '/' do
