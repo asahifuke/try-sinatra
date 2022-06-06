@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'csv'
 require 'securerandom'
+require 'pg'
 
 # Service to download ftp files from the server
 class Memo
-  CSV_NAME = 'rows.csv'
+  CONN ||= PG.connect(dbname: 'db_usage')
   attr_accessor :title, :body
   attr_reader :id
 
@@ -16,41 +16,30 @@ class Memo
   end
 
   def save
-    rows = Memo.read_csv
-    rows.map! do |row|
-      row[0] == id ? [@id, @title, @body] : row
+    if @id.nil?
+      CONN.exec('insert into memos(title, body) values($1, $2);', [@title, @body])
+    else
+      CONN.exec('update memos set title = $1, body = $2 where id = $3', [@title, @body, @id])
     end
-    rows.push([@id = SecureRandom.hex(20), @title, @body]) unless id
-    Memo.write_csv(rows)
   end
 
   def destory
-    rows = Memo.read_csv
-    rows.delete_if { |row| row[0] == id }
-    Memo.write_csv(rows)
+    CONN.exec('delete from memos where id = $1;', [@id])
   end
 
-  class << self
-    def all
-      Memo.read_csv.map! { |row| Memo.new(id: row[0], title: row[1], body: row[2]) }
-    end
-
-    def find(id)
-      memo = nil
-      CSV.foreach(CSV_NAME) do |row|
-        memo = Memo.new(id: row[0], title: row[1], body: row[2]) if row[0] == id
-      end
-      memo
-    end
-
-    def write_csv(rows)
-      CSV.open(CSV_NAME, 'w') do |csv|
-        rows.each { |row| csv << row }
+  def self.all
+    CONN.exec('select * from memos order by id;') do |memos|
+      memos.map do |memo|
+        Memo.new(id: memo['id'], title: memo['title'], body: memo['body'])
       end
     end
+  end
 
-    def read_csv
-      CSV.read(CSV_NAME)
+  def self.find(id)
+    CONN.exec('select * from memos where id = $1;', [id]) do |memos|
+      if (memo = memos.first)
+        Memo.new(id: memo['id'], title: memo['title'], body: memo['body'])
+      end
     end
   end
 end
