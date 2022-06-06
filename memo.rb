@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 require 'securerandom'
-require 'pg'
+require_relative './app'
 
 # Service to download ftp files from the server
 class Memo
-  CONN ||= PG.connect(dbname: 'db_usage')
   attr_accessor :title, :body
   attr_reader :id
 

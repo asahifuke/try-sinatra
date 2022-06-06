@@ -2,10 +2,10 @@
 
 require 'minitest/autorun'
 require_relative './memo'
+require_relative './app'
 
 # Service to download ftp files from the server
 class MemoTest < Minitest::Test
-  CONN ||= PG.connect(dbname: 'db_usage')
   def setup
     CONN.exec('delete from memos')
     @setup_title = 'setup title'
