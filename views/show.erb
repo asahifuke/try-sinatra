@@ -1,0 +1,10 @@
+<div class="margin-bottom"><%= html_escape(@memo.title) %></div>
+<div><%= html_escape(@memo.body) %></div>
+<div class="show-button" >
+  <button class="margin-right" onclick='location.href="/memos/<%= @memo.id %>/edit"'>変更</button>
+  <form method="post" action="/memos/<%= @memo.id %>">
+    <input type="hidden" name="_method" value="delete">
+    <input type="hidden" id="id" name="id" value="<%= @memo.id %>">
+    <input type="submit" value="削除">
+  </form>
+</div>
