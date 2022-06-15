@@ -1,11 +1,17 @@
 # frozen_string_literal: true
 
 require_relative './memo'
+require 'pg'
 require 'sinatra'
 require 'sinatra/reloader'
 require 'erb'
 
 Object.include ERB::Util
+
+CONN ||= PG.connect(dbname: 'db_usage')
+unless CONN.exec('SELECT * FROM information_schema.tables WHERE table_name = $1;', ['memos'])
+  CONN.exec('CREATE TABLE memos (id serial, title text, body text, primary key(id));')
+end
 
 get '/' do
   @memos = Memo.all
