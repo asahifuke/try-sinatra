@@ -3,7 +3,7 @@
 require 'securerandom'
 require_relative './app'
 
-# Service to download ftp files from the server
+# Service to download ftp files FROM the server
 class Memo
   attr_accessor :title, :body
   attr_reader :id
@@ -16,18 +16,18 @@ class Memo
 
   def save
     if @id.nil?
-      CONN.exec('insert into memos(title, body) values($1, $2);', [@title, @body])
+      CONN.exec('INSERT INTO memos(title, body) VALUES($1, $2);', [@title, @body])
     else
-      CONN.exec('update memos set title = $1, body = $2 where id = $3', [@title, @body, @id])
+      CONN.exec('UPDATE memos SET title = $1, body = $2 WHERE id = $3', [@title, @body, @id])
     end
   end
 
   def destory
-    CONN.exec('delete from memos where id = $1;', [@id])
+    CONN.exec('DELETE FROM memos WHERE id = $1;', [@id])
   end
 
   def self.all
-    CONN.exec('select * from memos order by id;') do |memos|
+    CONN.exec('SELECT * FROM memos ORDER BY id;') do |memos|
       memos.map do |memo|
         Memo.new(id: memo['id'], title: memo['title'], body: memo['body'])
       end
@@ -35,7 +35,7 @@ class Memo
   end
 
   def self.find(id)
-    CONN.exec('select * from memos where id = $1;', [id]) do |memos|
+    CONN.exec('SELECT * FROM memos WHERE id = $1;', [id]) do |memos|
       if (memo = memos.first)
         Memo.new(id: memo['id'], title: memo['title'], body: memo['body'])
       end

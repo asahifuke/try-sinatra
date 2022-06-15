@@ -10,7 +10,7 @@ Object.include ERB::Util
 
 CONN ||= PG.connect(dbname: 'db_usage')
 unless CONN.exec('SELECT * FROM information_schema.tables WHERE table_name = $1;', ['memos'])
-  CONN.exec('create table memos (id serial, title text, body text, primary key(id));')
+  CONN.exec('CREATE TABLE memos (id serial, title text, body text, primary key(id));')
 end
 
 get '/' do
